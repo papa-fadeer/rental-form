@@ -12,26 +12,70 @@
     <style>
         body { font-family: 'Sarabun', sans-serif; }
         
-        /* ตั้งค่าพิเศษสำหรับการสั่งพิมพ์ (Print) */
+        /* =========================================
+           ตั้งค่าพิเศษสำหรับการสั่งพิมพ์ (Print) ให้เหมือน PDF ต้นฉบับ
+           ========================================= */
         @media print {
-            body { background-color: white; }
-            .print-hidden { display: none !important; }
-            .print-shadow-none { box-shadow: none !important; border: none !important; }
-            
-            /* เปลี่ยน Input Box ให้กลายเป็นเส้นประเวลาพิมพ์ */
-            input[type="text"], input[type="date"] {
-                border: none !important;
-                border-bottom: 1px dotted #4b5563 !important;
-                border-radius: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                background-color: transparent !important;
-                box-shadow: none !important;
+            @page {
+                size: A4 portrait;
+                margin: 1.5cm; /* ระยะขอบกระดาษ */
+            }
+            body { 
+                background-color: white !important; 
+                font-size: 11.5pt !important;
+                color: black !important;
             }
             
-            /* ซ่อนกรอบพื้นหลังสีๆ เวลาพิมพ์ */
+            .print-hidden { display: none !important; }
+            .print-shadow-none { box-shadow: none !important; border: none !important; }
             .print-bg-transparent { background-color: transparent !important; }
             .print-border-none { border: none !important; }
+            
+            /* แปลง Input Box ให้กลายเป็นเส้นประและต่อท้าย Label (Inline) */
+            .input-group {
+                display: flex !important;
+                align-items: flex-end !important;
+                margin-bottom: 0.6rem !important;
+            }
+            .input-group label {
+                margin-bottom: 0 !important;
+                margin-right: 0.5rem !important;
+                font-weight: 500 !important;
+                color: black !important;
+            }
+            .input-group input[type="text"], 
+            .input-group input[type="date"] {
+                flex: 1 !important;
+                border: none !important;
+                border-bottom: 1.5px dotted black !important; /* เส้นประ */
+                border-radius: 0 !important;
+                padding: 0 4px !important;
+                margin: 0 !important;
+                background-color: transparent !important;
+                box-shadow: none !important;
+                height: 1.5rem !important;
+                color: black !important;
+                font-family: inherit !important;
+            }
+
+            /* ซ่อนไอคอนปฏิทินตอนพิมพ์ */
+            input[type="date"]::-webkit-calendar-picker-indicator {
+                display: none !important;
+            }
+            
+            /* ซ่อนเครื่องหมายดอกจันสีแดงตอนพิมพ์ */
+            .required-asterisk { display: none !important; }
+
+            /* ปรับระยะห่างระหว่างบรรทัดตอนพิมพ์ให้พอดี 1 หน้า A4 */
+            .print-compact-space {
+                gap: 0.5rem !important;
+            }
+            .print-section-mb {
+                margin-bottom: 1rem !important;
+            }
+            .print-text-normal {
+                font-weight: normal !important;
+            }
         }
     </style>
 </head>
@@ -41,158 +85,176 @@
     <div class="max-w-[850px] mx-auto bg-white shadow-xl rounded-lg overflow-hidden border-t-4 border-blue-900 print-shadow-none print-border-none print:max-w-full">
         
         <!-- ส่วนหัวเอกสาร -->
-        <div class="px-10 pt-12 pb-8 border-b border-gray-200 print-border-none">
+        <div class="px-10 pt-12 pb-6 border-b border-gray-200 print-border-none print:pt-0 print:pb-4">
             <div class="flex flex-col items-center justify-center text-center">
-                <!-- เพิ่มโลโก้บริษัทที่นี่ -->
-                <img src="./yyt.png" alt="YYT Logo" class="w-28 h-28 object-contain mb-4 print:w-24 print:h-24 drop-shadow-sm print:drop-shadow-none">
+                <!-- โลโก้บริษัท -->
+                <img src="./yyt.jpg" alt="YYT Logo" class="w-28 h-28 object-contain mb-4 print:w-20 print:h-20 drop-shadow-sm print:drop-shadow-none print:mb-2">
                 
-                <h1 class="text-2xl font-bold text-blue-900 mb-2 print:text-black">บริษัท ยั่งยืน เทคโนโลยี เซอร์วิส แอนด์ ซัพพลาย จำกัด</h1>
-                <h2 class="text-xl font-semibold text-gray-700 mb-6 print:text-black">แบบฟอร์มการขอเช่าคอมพิวเตอร์และสารสนเทศ</h2>
+                <h1 class="text-2xl font-bold text-blue-900 mb-1 print:text-black print:text-xl">บริษัท ยั่งยืน เทคโนโลยี เซอร์วิส แอนด์ ซัพพลาย จำกัด</h1>
+                <h2 class="text-xl font-semibold text-gray-700 mb-4 print:text-black print:text-lg">แบบฟอร์มการขอเช่าคอมพิวเตอร์และสารสนเทศ</h2>
             </div>
-            <div class="text-left font-semibold text-gray-800 mt-4 text-lg">
+            <div class="text-left font-semibold text-gray-800 mt-4 text-lg print:text-base print:mt-2">
                 เรียน <span class="ml-2 font-normal">กรรมการผู้จัดการ</span>
             </div>
         </div>
 
-        <form class="px-10 py-8 space-y-10" onsubmit="event.preventDefault();">
+        <form class="px-10 py-6 space-y-10 print:py-0 print:space-y-4" onsubmit="event.preventDefault();">
             
             <!-- ส่วนที่ 1: ผู้ขอใช้บริการ -->
-            <section>
-                <div class="bg-gray-50 border-l-4 border-blue-900 px-4 py-2 mb-6 print-bg-transparent print-border-none print:px-0">
-                    <h3 class="font-bold text-lg text-gray-900">ส่วนที่ 1 ผู้ขอใช้บริการ (User)</h3>
+            <section class="print-section-mb">
+                <div class="bg-gray-50 border-l-4 border-blue-900 px-4 py-2 mb-6 print-bg-transparent print-border-none print:px-0 print:mb-2">
+                    <h3 class="font-bold text-lg text-gray-900 print:text-base">ส่วนที่ 1 ผู้ขอใช้บริการ (User)</h3>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">วันที่ขอใช้บริการ <span class="text-red-500">*</span></label>
-                        <input type="date" class="w-full md:w-1/3 border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition" required />
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 print:grid-cols-2 print-compact-space">
+                    <div class="md:col-span-2 input-group">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">วันที่ขอใช้บริการ <span class="text-red-500 required-asterisk">*</span><span class="hidden print:inline"> :</span></label>
+                        <input type="date" class="w-full md:w-1/3 border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition" required />
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">ชื่อ-นามสกุล ภาษาไทย <span class="text-red-500">*</span></label>
-                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition" required />
+                    <div class="input-group">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">ชื่อ-นามสกุล ภาษาไทย <span class="text-red-500 required-asterisk">*</span><span class="hidden print:inline"> :</span></label>
+                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition" required />
                     </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">ชื่อ-นามสกุล ภาษาอังกฤษ</label>
-                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition" />
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">ตำแหน่ง <span class="text-red-500">*</span></label>
-                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition" required />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">เบอร์โทร <span class="text-red-500">*</span></label>
-                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition" required />
+                    <div class="input-group">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">ชื่อ-นามสกุล ภาษาอังกฤษ<span class="hidden print:inline"> :</span></label>
+                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition" />
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">บริษัท <span class="text-red-500">*</span></label>
-                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition" required />
+                    <div class="input-group">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">ตำแหน่ง <span class="text-red-500 required-asterisk">*</span><span class="hidden print:inline"> :</span></label>
+                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition" required />
                     </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">ประเภทพนักงาน <span class="text-red-500">*</span></label>
-                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition" required />
+                    <div class="input-group">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">เบอร์โทร <span class="text-red-500 required-asterisk">*</span><span class="hidden print:inline"> :</span></label>
+                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition" required />
+                    </div>
+
+                    <div class="input-group">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">บริษัท <span class="text-red-500 required-asterisk">*</span><span class="hidden print:inline"> :</span></label>
+                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition" required />
+                    </div>
+                    <div class="input-group">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">ประเภทพนักงาน <span class="text-red-500 required-asterisk">*</span><span class="hidden print:inline"> :</span></label>
+                        <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600 transition" required />
                     </div>
                 </div>
             </section>
 
             <!-- ส่วนที่ 2: รายละเอียด -->
-            <section>
-                <div class="bg-gray-50 border-l-4 border-blue-900 px-4 py-2 mb-6 print-bg-transparent print-border-none print:px-0">
-                    <h3 class="font-bold text-lg text-gray-900">ส่วนที่ 2 รายละเอียด (Details)</h3>
-                    <p class="text-sm text-gray-600 mt-1">มีความประสงค์ในการเช่า ดังนี้</p>
+            <section class="print-section-mb">
+                <div class="bg-gray-50 border-l-4 border-blue-900 px-4 py-2 mb-4 print-bg-transparent print-border-none print:px-0 print:mb-2">
+                    <h3 class="font-bold text-lg text-gray-900 print:text-base">ส่วนที่ 2 รายละเอียด (Details)</h3>
+                    <p class="text-sm text-gray-600 mt-1 print:text-black">มีความประสงค์ในการเช่า ดังนี้</p>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- กล่อง Checkbox จัดให้เป็นแนวตั้งเหมือนต้นฉบับในหน้า Print -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 print:grid-cols-1 print:gap-1.5 print:ml-4">
                     <label class="flex items-start space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded transition print:p-0 print:hover:bg-transparent">
-                        <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-300 text-blue-900 focus:ring-blue-900" />
+                        <input type="checkbox" class="mt-1 w-5 h-5 print:w-4 print:h-4 rounded border-gray-400 text-blue-900 focus:ring-blue-900" />
                         <span class="text-base text-gray-800">Computer PC + Display Monitor Supervisor</span>
                     </label>
                     <label class="flex items-start space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded transition print:p-0 print:hover:bg-transparent">
-                        <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-300 text-blue-900 focus:ring-blue-900" />
+                        <input type="checkbox" class="mt-1 w-5 h-5 print:w-4 print:h-4 rounded border-gray-400 text-blue-900 focus:ring-blue-900" />
                         <span class="text-base text-gray-800">Computer PC + Display Monitor</span>
                     </label>
                     <label class="flex items-start space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded transition print:p-0 print:hover:bg-transparent">
-                        <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-300 text-blue-900 focus:ring-blue-900" />
+                        <input type="checkbox" class="mt-1 w-5 h-5 print:w-4 print:h-4 rounded border-gray-400 text-blue-900 focus:ring-blue-900" />
                         <span class="text-base text-gray-800">Computer Notebook Supervisor</span>
                     </label>
                     <label class="flex items-start space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded transition print:p-0 print:hover:bg-transparent">
-                        <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-300 text-blue-900 focus:ring-blue-900" />
+                        <input type="checkbox" class="mt-1 w-5 h-5 print:w-4 print:h-4 rounded border-gray-400 text-blue-900 focus:ring-blue-900" />
                         <span class="text-base text-gray-800">Computer Notebook</span>
                     </label>
                     <label class="flex items-start space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded transition print:p-0 print:hover:bg-transparent">
-                        <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-300 text-blue-900 focus:ring-blue-900" />
+                        <input type="checkbox" class="mt-1 w-5 h-5 print:w-4 print:h-4 rounded border-gray-400 text-blue-900 focus:ring-blue-900" />
                         <span class="text-base text-gray-800">Software Windows 11</span>
                     </label>
                     <label class="flex items-start space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded transition print:p-0 print:hover:bg-transparent">
-                        <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-300 text-blue-900 focus:ring-blue-900" />
+                        <input type="checkbox" class="mt-1 w-5 h-5 print:w-4 print:h-4 rounded border-gray-400 text-blue-900 focus:ring-blue-900" />
                         <span class="text-base text-gray-800">E-mail</span>
                     </label>
                     <label class="flex items-start space-x-3 cursor-pointer p-2 hover:bg-gray-50 rounded transition print:p-0 print:hover:bg-transparent">
-                        <input type="checkbox" class="mt-1 w-5 h-5 rounded border-gray-300 text-blue-900 focus:ring-blue-900" />
+                        <input type="checkbox" class="mt-1 w-5 h-5 print:w-4 print:h-4 rounded border-gray-400 text-blue-900 focus:ring-blue-900" />
                         <span class="text-base text-gray-800">Express</span>
                     </label>
                     
-                    <div class="flex items-center space-x-3 p-2 print:p-0">
-                        <label class="flex items-center space-x-3 cursor-pointer shrink-0">
-                            <input type="checkbox" id="otherCheckbox" class="w-5 h-5 rounded border-gray-300 text-blue-900 focus:ring-blue-900" />
+                    <div class="input-group p-2 print:p-0">
+                        <label class="flex items-center space-x-3 cursor-pointer shrink-0 print:mb-0">
+                            <input type="checkbox" id="otherCheckbox" class="w-5 h-5 print:w-4 print:h-4 rounded border-gray-400 text-blue-900 focus:ring-blue-900" />
                             <span class="text-base text-gray-800">อื่นๆ ระบุ :</span>
                         </label>
-                        <input type="text" id="otherDetail" disabled class="flex-1 border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100 disabled:opacity-60 transition" />
+                        <input type="text" id="otherDetail" disabled class="w-full border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100 disabled:opacity-60 transition print:disabled:bg-transparent print:disabled:opacity-100" />
                     </div>
                 </div>
             </section>
 
             <!-- ส่วนที่ 3: การพิจารณา -->
-            <section>
-                <div class="bg-gray-50 border-l-4 border-blue-900 px-4 py-2 mb-6 print-bg-transparent print-border-none print:px-0">
-                    <h3 class="font-bold text-lg text-gray-900">ส่วนที่ 3 ผู้บังคับบัญชาพิจารณา (Consideration of Supervisor)</h3>
-                    <p class="text-sm text-gray-600 mt-1">ความเห็นของผู้บังคับบัญชา</p>
+            <section class="print-section-mb">
+                <div class="bg-gray-50 border-l-4 border-blue-900 px-4 py-2 mb-4 print-bg-transparent print-border-none print:px-0 print:mb-2">
+                    <h3 class="font-bold text-lg text-gray-900 print:text-base">ส่วนที่ 3 ผู้บังคับบัญชาพิจารณา (Consideration of Supervisor)</h3>
+                    <p class="text-sm text-gray-600 mt-1 print:text-black">ความเห็นของผู้บังคับบัญชา</p>
                 </div>
                 
-                <div class="space-y-4 mb-8">
-                    <label class="inline-flex items-center space-x-3 cursor-pointer mr-8">
-                        <input type="radio" name="approvalStatus" id="approveRadio" value="approved" class="w-5 h-5 border-gray-300 text-blue-900 focus:ring-blue-900" />
-                        <span class="text-base font-medium text-gray-800">เห็นควรอนุมัติ</span>
-                    </label>
-                    <div class="flex flex-col sm:flex-row sm:items-center mt-3 sm:mt-0 space-y-3 sm:space-y-0">
-                        <label class="inline-flex items-center space-x-3 cursor-pointer shrink-0 sm:mr-4">
-                            <input type="radio" name="approvalStatus" id="rejectRadio" value="rejected" class="w-5 h-5 border-gray-300 text-blue-900 focus:ring-blue-900" />
-                            <span class="text-base font-medium text-gray-800">ไม่เห็นควรอนุมัติ</span>
+                <div class="space-y-4 mb-8 print:ml-4 print:space-y-2 print:mb-6">
+                    <div class="flex flex-col sm:flex-row print:flex-row print:items-center sm:space-x-8 print:space-x-8 space-y-3 sm:space-y-0 print:space-y-0 mb-3 print:mb-1">
+                        <label class="inline-flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="approvalStatus" id="approveRadio" value="approved" class="w-5 h-5 print:w-4 print:h-4 border-gray-400 text-blue-900 focus:ring-blue-900" />
+                            <span class="text-base font-medium text-gray-800 print-text-normal">เห็นควรอนุมัติ</span>
                         </label>
-                        <div class="flex items-center flex-1">
-                            <span class="text-sm text-gray-600 mr-2 whitespace-nowrap">สาเหตุเพราะ :</span>
-                            <input type="text" id="rejectReason" disabled class="flex-1 border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100 disabled:opacity-60 transition" />
-                        </div>
+                        <label class="inline-flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="approvalStatus" id="rejectRadio" value="rejected" class="w-5 h-5 print:w-4 print:h-4 border-gray-400 text-blue-900 focus:ring-blue-900" />
+                            <span class="text-base font-medium text-gray-800 print-text-normal">ไม่เห็นควรอนุมัติ</span>
+                        </label>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="shrink-0 text-gray-800 print:mb-0">สาเหตุเพราะ :</label>
+                        <input type="text" id="rejectReason" disabled class="w-full border border-gray-300 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-600 disabled:bg-gray-100 disabled:opacity-60 transition print:disabled:bg-transparent print:disabled:opacity-100" />
                     </div>
                 </div>
 
-                <!-- ลายเซ็น -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-16 px-4">
-                    <div class="flex flex-col items-center">
-                        <div class="w-full max-w-[250px] border-b border-gray-400 border-dotted mb-2"></div>
-                        <p class="text-gray-700">( <span class="inline-block w-48 border-b border-gray-400 border-dotted mx-1"></span> )</p>
-                        <p class="text-gray-700 mt-2">วันที่ <span class="inline-block w-32 border-b border-gray-400 border-dotted mx-1"></span></p>
-                        <p class="text-gray-500 text-sm mt-1">ผู้ขอใช้บริการ</p>
+                <!-- ลายเซ็น ตรงตามต้นฉบับ 100% -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12 px-4 print:mt-10">
+                    
+                    <!-- ฝั่งผู้ขอใช้บริการ -->
+                    <div class="flex flex-col items-center text-gray-800 print:items-start print:ml-8">
+                        <div class="flex items-end mb-3">
+                            <span class="mr-2">ลงชื่อ</span>
+                            (<span class="inline-block w-48 border-b-[1.5px] border-gray-800 border-dotted mx-1"></span>)
+                        </div>
+                        <div class="flex items-end mb-3 ml-10">
+                            (<span class="inline-block w-48 border-b-[1.5px] border-gray-800 border-dotted mx-1"></span>)
+                        </div>
+                        <div class="flex items-end">
+                            <span class="mr-2 ml-1">วันที่</span>
+                            <span class="inline-block w-52 border-b-[1.5px] border-gray-800 border-dotted mx-1"></span>
+                        </div>
                     </div>
-                    <div class="flex flex-col items-center">
-                        <div class="w-full max-w-[250px] border-b border-gray-400 border-dotted mb-2"></div>
-                        <p class="text-gray-700">( <span class="inline-block w-48 border-b border-gray-400 border-dotted mx-1"></span> )</p>
-                        <p class="text-gray-700 mt-2">วันที่ <span class="inline-block w-32 border-b border-gray-400 border-dotted mx-1"></span></p>
-                        <p class="text-gray-500 text-sm mt-1">ผู้บังคับบัญชา</p>
+
+                    <!-- ฝั่งผู้บังคับบัญชา -->
+                    <div class="flex flex-col items-center text-gray-800 print:items-start print:ml-8">
+                        <div class="flex items-end mb-3 mt-[2.2rem] md:mt-0 print:mt-0">
+                            <span class="mr-2">ลงชื่อ</span>
+                            (<span class="inline-block w-48 border-b-[1.5px] border-gray-800 border-dotted mx-1"></span>)
+                        </div>
+                        <div class="flex items-end mt-[2.1rem]">
+                            <span class="mr-2 ml-1">วันที่</span>
+                            <span class="inline-block w-52 border-b-[1.5px] border-gray-800 border-dotted mx-1"></span>
+                        </div>
                     </div>
+                    
                 </div>
             </section>
 
             <!-- หมายเหตุ (Footer) -->
-            <div class="mt-12 pt-6 border-t border-gray-200 text-sm text-gray-600 print-border-none">
-                <p class="mb-1"><span class="font-bold text-gray-800">หมายเหตุ:</span> ได้รับอนุมัติจากผู้บังคับบัญชาต้นสังกัดแล้วรบกวนส่งไฟล์แสกนทาง E-mail: <a href="mailto:support@yangyuentech.com" class="text-blue-700 hover:underline">support@yangyuentech.com</a></p>
-                <p>ติดต่อสอบถามรายละเอียดเพิ่มเติมโทร. <span class="font-bold text-gray-800">093-287-4544</span></p>
+            <div class="mt-12 pt-4 border-t border-gray-200 text-sm text-gray-600 print-border-none print:mt-8 print:text-[11pt]">
+                <p class="mb-1 text-gray-800"><span class="font-bold print:underline">หมายเหตุ</span> ได้รับอนุมัติจากผู้บังคับบัญชาต้นสังกัดแล้วรบกวนส่งไฟล์ แสกนทาง เมลล์ <a href="mailto:support@yangyuentech.com" class="text-blue-700 print:text-black">support@yangyuentech.com</a></p>
+                <p class="text-gray-800">ติดต่อสอบถามรายละเอียดเพิ่มเติมโทร. <span class="font-bold">093-287-4544</span></p>
             </div>
 
             <!-- ปุ่ม Action (ซ่อนตอน Print) -->
-            <div class="mt-10 flex justify-center gap-4 print-hidden pb-4">
+            <div class="mt-8 flex justify-center gap-4 print-hidden pb-4">
                 <button type="button" onclick="window.print()" class="bg-blue-900 text-white px-8 py-3 rounded-md hover:bg-blue-800 transition-colors flex items-center gap-2 font-medium shadow-md focus:ring-4 focus:ring-blue-300">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 6 2 18 2 18 9"></polyline>
