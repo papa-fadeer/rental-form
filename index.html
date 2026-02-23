@@ -4,108 +4,353 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แบบฟอร์มการขอเช่าคอมพิวเตอร์และสารสนเทศ</title>
-    <!-- โหลด Tailwind CSS ผ่าน CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- โหลดฟอนต์ Sarabun เพื่อให้ดูเป็นเอกสารทางการระดับองค์กร -->
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- โหลดฟอนต์ Sarabun -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Sarabun', sans-serif; }
+        /* ตั้งค่าพื้นหลังของหน้าจอ */
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #d1d5db; 
+            margin: 0;
+            padding: 20px 0;
+            color: #000;
+            font-size: 16px; 
+            line-height: 1.5;
+        }
+
+        /* จำลองกระดาษ A4 */
+        .a4-paper {
+            width: 210mm;
+            min-height: 297mm;
+            background-color: #fff;
+            margin: 0 auto;
+            padding: 20mm 15mm;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* การจัดวางข้อความ */
+        .text-center { text-align: center; }
+        .font-bold { font-weight: 700; }
+        .mt-1 { margin-top: 5px; }
+        .mt-2 { margin-top: 10px; }
+        .mt-4 { margin-top: 20px; }
+        .mt-6 { margin-top: 30px; }
+        .mb-4 { margin-bottom: 20px; }
+        .ml-4 { margin-left: 20px; }
+        .ml-8 { margin-left: 40px; }
+
+        /* หัวเรื่อง */
+        .doc-title { font-size: 22px; margin: 0; }
+        .doc-subtitle { font-size: 20px; margin: 5px 0 15px 0; }
         
-        /* =========================================
-           ตั้งค่าพิเศษสำหรับการสั่งพิมพ์ (Print) ให้เหมือน PDF ต้นฉบับ
-           ========================================= */
+        /* สไตล์ของหัวข้อส่วน 1, 2, 3 (สีฟ้าตามโลโก้) */
+        .section-title { 
+            font-size: 16px; 
+            margin: 25px 0 12px 0; 
+            background-color: #e6f0ff; 
+            color: #000066; 
+            padding: 6px 10px; 
+            border-left: 5px solid #000066; 
+            text-decoration: none; 
+            -webkit-print-color-adjust: exact; 
+            print-color-adjust: exact;
+        }
+
+        /* จัดแถวของฟอร์ม */
+        .row {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 12px;
+            white-space: nowrap;
+        }
+        
+        /* ช่องกรอกข้อความ (เส้นประ) */
+        input[type="text"] {
+            border: none;
+            border-bottom: 1px dashed #000;
+            background-color: transparent;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 16px;
+            color: #0000ee; 
+            padding: 0 5px;
+            outline: none;
+            flex-grow: 1; 
+            margin: 0 5px;
+        }
+
+        /* กล่อง Checkbox ให้เป็นสี่เหลี่ยม */
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .checkbox-row input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-right: 10px;
+            border: 1px solid #000;
+            appearance: auto;
+            cursor: pointer;
+        }
+
+        /* ส่วนของลายเซ็น */
+        .signature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            margin-top: 40px;
+            gap: 20px;
+        }
+        .sig-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sig-line {
+            display: flex;
+            align-items: flex-end;
+            margin-bottom: 10px;
+        }
+
+        /* หมายเหตุ (Footer) */
+        .remark-section {
+            margin-top: 30px;
+            font-size: 14px;
+        }
+
+        /* ชุดปุ่มลอย (Floating Actions) */
+        .floating-actions {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .action-btn {
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-family: 'Sarabun', sans-serif;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.2s;
+        }
+        .btn-print { background-color: #4b5563; } /* สีเทาเข้ม */
+        .btn-print:hover { background-color: #374151; }
+        
+        .btn-telegram { background-color: #0088cc; } /* สี Telegram */
+        .btn-telegram:hover { background-color: #0077b3; }
+
+        /* การตั้งค่าเมื่อกดพิมพ์ (Print) */
         @media print {
-            @page {
-                size: A4 portrait;
-                margin: 1.5cm; /* ระยะขอบกระดาษ */
-            }
-            body { 
-                background-color: white !important; 
-                font-size: 11.5pt !important;
-                color: black !important;
-            }
-            
-            .print-hidden { display: none !important; }
-            .print-shadow-none { box-shadow: none !important; border: none !important; }
-            .print-bg-transparent { background-color: transparent !important; }
-            .print-border-none { border: none !important; }
-            
-            /* แปลง Input Box ให้กลายเป็นเส้นประและต่อท้าย Label (Inline) */
-            .input-group {
-                display: flex !important;
-                align-items: flex-end !important;
-                margin-bottom: 0.6rem !important;
-            }
-            .input-group label {
-                margin-bottom: 0 !important;
-                margin-right: 0.5rem !important;
-                font-weight: 500 !important;
-                color: black !important;
-            }
-            .input-group input[type="text"], 
-            .input-group input[type="date"] {
-                flex: 1 !important;
-                border: none !important;
-                border-bottom: 1.5px dotted black !important; /* เส้นประ */
-                border-radius: 0 !important;
-                padding: 0 4px !important;
-                margin: 0 !important;
-                background-color: transparent !important;
-                box-shadow: none !important;
-                height: 1.5rem !important;
-                color: black !important;
-                font-family: inherit !important;
-            }
-
-            /* ซ่อนไอคอนปฏิทินตอนพิมพ์ */
-            input[type="date"]::-webkit-calendar-picker-indicator {
-                display: none !important;
-            }
-            
-            /* ซ่อนเครื่องหมายดอกจันสีแดงตอนพิมพ์ */
-            .required-asterisk { display: none !important; }
-
-            /* ปรับระยะห่างระหว่างบรรทัดตอนพิมพ์ให้พอดี 1 หน้า A4 */
-            .print-compact-space {
-                gap: 0.5rem !important;
-            }
-            .print-section-mb {
-                margin-bottom: 1rem !important;
-            }
-            .print-text-normal {
-                font-weight: normal !important;
-            }
+            body { background-color: #fff; padding: 0; margin: 0; }
+            .a4-paper { width: 100%; min-height: auto; margin: 0; padding: 0; box-shadow: none; }
+            .floating-actions { display: none; } /* ซ่อนปุ่มทั้งหมด */
+            input[type="text"] { color: #000; } 
+            @page { size: A4 portrait; margin: 15mm; }
         }
     </style>
 </head>
-<body class="bg-gray-100 py-10 px-4 print:bg-white print:py-0 print:px-0 text-gray-800 min-h-screen">
+<body>
 
-    <!-- Container หลัก -->
-    <div class="max-w-[850px] mx-auto bg-white shadow-xl rounded-lg overflow-hidden border-t-4 border-blue-900 print-shadow-none print-border-none print:max-w-full">
+    <!-- ปุ่ม Action -->
+    <div class="floating-actions">
+        <button class="action-btn btn-telegram" onclick="sendToTelegram()" id="sendBtn">
+            <!-- Telegram Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+            ส่งแจ้งเตือน
+        </button>
+
+        <button class="action-btn btn-print" onclick="window.print()">
+            <!-- Print Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect width="12" height="8" x="6" y="14"></rect>
+            </svg>
+            พิมพ์เอกสาร
+        </button>
+    </div>
+
+    <!-- หน้ากระดาษ A4 -->
+    <div class="a4-paper">
         
-        <!-- ส่วนหัวเอกสาร -->
-        <div class="px-10 pt-12 pb-6 border-b border-gray-200 print-border-none print:pt-0 print:pb-4">
-            <div class="flex flex-col items-center justify-center text-center">
-                <!-- โลโก้บริษัท -->
-                <img src="./yyt.png" alt="YYT Logo" class="w-28 h-28 object-contain mb-4 print:w-20 print:h-20 drop-shadow-sm print:drop-shadow-none print:mb-2">
-                
-                <h1 class="text-2xl font-bold text-blue-900 mb-1 print:text-black print:text-xl">บริษัท ยั่งยืน เทคโนโลยี เซอร์วิส แอนด์ ซัพพลาย จำกัด</h1>
-                <h2 class="text-xl font-semibold text-gray-700 mb-4 print:text-black print:text-lg">แบบฟอร์มการขอเช่าคอมพิวเตอร์และสารสนเทศ</h2>
-            </div>
-            <div class="text-left font-semibold text-gray-800 mt-4 text-lg print:text-base print:mt-2">
-                เรียน <span class="ml-2 font-normal">กรรมการผู้จัดการ</span>
+        <div class="text-center mb-4">
+            <img src="./yyt.png" alt="YYT Logo" style="width: 100px; height: 100px; object-fit: contain; margin-bottom: 10px;">
+            <h1 class="doc-title font-bold">บริษัท ยั่งยืน เทคโนโลยี เซอร์วิส แอนด์ ซัพพลาย จำกัด</h1>
+            <h2 class="doc-subtitle font-bold">แบบฟอร์มการขอเช่าคอมพิวเตอร์และสารสนเทศ</h2>
+        </div>
+        
+        <div><span class="font-bold">เรียน</span> กรรมการผู้จัดการ</div>
+
+        <!-- ส่วนที่ 1 -->
+        <h3 class="section-title font-bold">ส่วนที่ 1 ผู้ขอใช้บริการ (User)</h3>
+        
+        <div class="row">วันที่ขอใช้บริการ <span style="margin: 0 5px;">:</span> <input type="text" id="req_date" style="max-width: 250px;"></div>
+        <div class="row">ชื่อ-นามสกุล ภาษาไทย <input type="text" id="name_th"></div>
+        <div class="row">ชื่อ-นามสกุล ภาษาอังกฤษ <input type="text" id="name_en"></div>
+        <div class="row">ตำแหน่ง <input type="text" id="position"> เบอร์โทร <input type="text" id="phone"></div>
+        <div class="row">บริษัท <input type="text" id="company"> ประเภทพนักงาน <input type="text" id="emp_type"></div>
+
+        <!-- ส่วนที่ 2 -->
+        <h3 class="section-title font-bold mt-6">ส่วนที่ 2 รายละเอียด (Details)</h3>
+        <div class="mb-4">มีความประสงค์ในการเช่า ดังนี้</div>
+        
+        <div class="ml-4">
+            <label class="checkbox-row"><input type="checkbox" id="chk_pc_sup"> Computer PC + Display Monitor Supervisor</label>
+            <label class="checkbox-row"><input type="checkbox" id="chk_pc"> Computer PC + Display Monitor</label>
+            <label class="checkbox-row"><input type="checkbox" id="chk_nb_sup"> Computer Notebook Supervisor</label>
+            <label class="checkbox-row"><input type="checkbox" id="chk_nb"> Computer Notebook</label>
+            <label class="checkbox-row"><input type="checkbox" id="chk_win11"> Soft ware Windows 11</label>
+            <label class="checkbox-row"><input type="checkbox" id="chk_email"> E-mail</label>
+            <label class="checkbox-row"><input type="checkbox" id="chk_express"> Express</label>
+            
+            <div class="row mt-2">
+                <label style="display: flex; align-items: center;"><input type="checkbox" id="chk_other" style="width: 16px; height: 16px; margin-right: 10px;"> อื่นๆ</label>
+                <input type="text" id="other_text">
             </div>
         </div>
 
-        <form class="px-10 py-6 space-y-10 print:py-0 print:space-y-4" onsubmit="event.preventDefault();">
+        <div style="display: flex; justify-content: flex-end; margin-top: 20px; margin-right: 40px;">
+            <div class="sig-box">
+                <div class="sig-line">ลงชื่อ (<input type="text" style="width: 200px;">)</div>
+                <div class="sig-line">(<input type="text" style="width: 200px;">)</div>
+                <div class="sig-line">วันที่ <input type="text" style="width: 200px; margin-left: 10px;"></div>
+            </div>
+        </div>
+
+        <!-- ส่วนที่ 3 -->
+        <h3 class="section-title font-bold mt-6">ส่วนที่ 3 ผู้บังคับบัญชาพิจารณา (Consideration of Supervisor)</h3>
+        <div class="mb-4">ความเห็นของผู้บังคับบัญชา</div>
+        
+        <div class="ml-4">
+            <label class="checkbox-row"><input type="checkbox" id="chk_approve"> เห็นควรอนุมัติ</label>
+            <div class="row mt-2">
+                <label style="display: flex; align-items: center;"><input type="checkbox" id="chk_reject" style="width: 16px; height: 16px; margin-right: 10px;"> ไม่เห็นควรอนุมัติ</label>
+                <span style="margin-left: 20px;">สาเหตุเพราะ :</span> <input type="text" id="reject_reason">
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 30px; margin-right: 40px;">
+            <div class="sig-box">
+                <div class="sig-line">ลงชื่อ (<input type="text" style="width: 200px;">)</div>
+                <div class="sig-line" style="margin-top: 36px;">วันที่ <input type="text" style="width: 200px; margin-left: 10px;"></div>
+            </div>
+        </div>
+
+        <!-- หมายเหตุ -->
+        <div class="remark-section">
+            <div style="margin-bottom: 5px;">
+                <span class="font-bold">หมายเหตุ</span> ได้รับอนุมัติจากผู้บังคับบัญชาต้นสังกัดแล้วรบกวนส่งไฟล์ สแกนทาง เมลล์ <a href="mailto:support@yangyuentech.com" style="color: #000;">support@yangyuentech.com</a>
+            </div>
+            <div>ติดต่อสอบถามรายละเอียดเพิ่มเติมโทร. <span class="font-bold">093-287-4544</span></div>
+        </div>
+    </div>
+
+    <!-- Script สำหรับส่งข้อมูลเข้า Telegram -->
+    <script>
+        // 🚨 นำ BOT TOKEN และ CHAT ID ของคุณมาใส่ตรงนี้ 🚨
+        const TELEGRAM_BOT_TOKEN = '7837280711:AAHnqIQMN6me15DN7b7Ftbeh94fI9AUZ4dE'; 
+        const TELEGRAM_CHAT_ID = '-1003784201826';
+
+        async function sendToTelegram() {
+            // ดึงข้อมูลชื่อ เพื่อเช็คว่ากรอกหรือยัง (ป้องกันการส่งข้อมูลเปล่า)
+            const nameTh = document.getElementById('name_th').value.trim();
+            if (!nameTh) {
+                alert("⚠️ กรุณากรอก 'ชื่อ-นามสกุล ภาษาไทย' ก่อนส่งข้อมูลครับ");
+                document.getElementById('name_th').focus();
+                return;
+            }
+
+            // เปลี่ยนข้อความบนปุ่มขณะกำลังส่ง
+            const sendBtn = document.getElementById('sendBtn');
+            const originalBtnHtml = sendBtn.innerHTML;
+            sendBtn.innerHTML = 'กำลังส่ง...';
+            sendBtn.disabled = true;
+
+            // รวบรวมข้อมูลอุปกรณ์ที่เลือก
+            let selectedItems = [];
+            if(document.getElementById('chk_pc_sup').checked) selectedItems.push('- Computer PC + Display Monitor Supervisor');
+            if(document.getElementById('chk_pc').checked) selectedItems.push('- Computer PC + Display Monitor');
+            if(document.getElementById('chk_nb_sup').checked) selectedItems.push('- Computer Notebook Supervisor');
+            if(document.getElementById('chk_nb').checked) selectedItems.push('- Computer Notebook');
+            if(document.getElementById('chk_win11').checked) selectedItems.push('- Software Windows 11');
+            if(document.getElementById('chk_email').checked) selectedItems.push('- E-mail');
+            if(document.getElementById('chk_express').checked) selectedItems.push('- Express');
+            if(document.getElementById('chk_other').checked) {
+                const otherDetail = document.getElementById('other_text').value || '(ไม่ได้ระบุ)';
+                selectedItems.push(`- อื่นๆ: ${otherDetail}`);
+            }
             
-            <!-- ส่วนที่ 1: ผู้ขอใช้บริการ -->
-            <section class="print-section-mb">
-                <div class="bg-gray-50 border-l-4 border-blue-900 px-4 py-2 mb-6 print-bg-transparent print-border-none print:px-0 print:mb-2">
-                    <h3 class="font-bold text-lg text-gray-900 print:text-base">ส่วนที่ 1 ผู้ขอใช้บริการ (User)</h3>
-                </div>
-                
+            let equipmentsText = selectedItems.length > 0 ? selectedItems.join('\n') : '- (ไม่ได้ระบุอุปกรณ์)';
+
+            // ดึงข้อมูลอื่นๆ
+            const reqDate = document.getElementById('req_date').value || '-';
+            const position = document.getElementById('position').value || '-';
+            const company = document.getElementById('company').value || '-';
+            const phone = document.getElementById('phone').value || '-';
+
+            // สร้างข้อความ (Message) ที่จะส่งเข้าแชท (รองรับ HTML)
+            const message = `
+📢 <b>มีฟอร์มขอเช่าคอมพิวเตอร์ใหม่</b>
+
+👤 <b>ผู้ขอใช้บริการ:</b> ${nameTh}
+👔 <b>ตำแหน่ง:</b> ${position}
+🏢 <b>บริษัท:</b> ${company}
+📞 <b>เบอร์โทร:</b> ${phone}
+📅 <b>วันที่ขอ:</b> ${reqDate}
+
+💻 <b>อุปกรณ์ที่ต้องการ:</b>
+${equipmentsText}
+            `.trim();
+
+            // ส่ง HTTP Request ไปยัง Telegram API
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+
+                if (response.ok) {
+                    alert('✅ ส่งข้อมูลแจ้งเตือนไปยัง Telegram สำเร็จแล้ว!');
+                } else {
+                    const errorData = await response.json();
+                    alert(`❌ เกิดข้อผิดพลาดจาก Telegram: ${errorData.description}`);
+                }
+            } catch (error) {
+                alert('❌ ไม่สามารถเชื่อมต่อกับระบบ Telegram ได้ กรุณาลองใหม่อีกครั้ง');
+                console.error(error);
+            } finally {
+                // คืนค่าปุ่มกลับมาเหมือนเดิม
+                sendBtn.innerHTML = originalBtnHtml;
+                sendBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
+
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 print:grid-cols-2 print-compact-space">
                     <div class="md:col-span-2 input-group">
                         <label class="block text-sm font-semibold text-gray-700 mb-1">วันที่ขอใช้บริการ <span class="text-red-500 required-asterisk">*</span><span class="hidden print:inline"> :</span></label>
