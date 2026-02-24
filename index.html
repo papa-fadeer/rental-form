@@ -156,11 +156,12 @@
 
         /* การตั้งค่าเมื่อกดพิมพ์ (Print) ให้พอดี A4 แบบ 100% */
         @media print {
-            @page { size: A4 portrait; margin: 10mm; } /* ควบคุมขอบกระดาษให้เล็กลง */
+            @page { size: A4 portrait; margin: 8mm; } /* ลดขอบกระดาษลงอีกนิดเพื่อเพิ่มพื้นที่เนื้อหา */
             body { 
                 background-color: #fff; 
                 padding: 0; 
                 margin: 0; 
+                font-size: 15px; /* ลดขนาดฟอนต์ลงเล็กน้อยเฉพาะตอนพิมพ์ */
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact; 
             }
@@ -168,11 +169,26 @@
                 width: 100%; 
                 min-height: auto; 
                 margin: 0; 
-                padding: 0; /* เอา padding ออกตอนพิมพ์เพื่อไม่ให้หน้าล้น */
+                padding: 0; 
                 box-shadow: none; 
+                page-break-after: avoid; /* ป้องกันการขึ้นหน้าใหม่ */
+                page-break-inside: avoid;
             }
             .floating-actions { display: none !important; } /* ซ่อนปุ่มทั้งหมด */
-            input[type="text"] { color: #000; } /* เปลี่ยนปากกาสีน้ำเงินเป็นสีดำ */
+            input[type="text"] { color: #000; font-size: 15px; } /* เปลี่ยนปากกาสีน้ำเงินเป็นสีดำ */
+            
+            /* บีบระยะห่าง (Margin) ในจุดต่างๆ ลง เพื่อรับประกันว่าไม่ล้นไปหน้า 2 */
+            .doc-title { font-size: 20px; margin-bottom: 2px; }
+            .doc-subtitle { font-size: 18px; margin: 2px 0 5px 0; }
+            .section-title { margin: 12px 0 8px 0; padding: 4px 10px; font-size: 15px; }
+            .mt-6 { margin-top: 12px; }
+            .mt-4 { margin-top: 10px; }
+            .mb-4 { margin-bottom: 8px; }
+            .row { margin-bottom: 8px; }
+            .checkbox-row { margin-bottom: 4px; }
+            .signature-grid { margin-top: 15px; }
+            .remark-section { margin-top: 15px; font-size: 13px; }
+            img { width: 85px !important; height: 85px !important; margin-bottom: 5px !important; }
         }
     </style>
 </head>
@@ -204,7 +220,7 @@
     <div class="a4-paper" id="formContent">
         
         <div class="text-center mb-4">
-            <img src="./yyt.png" alt="YYT Logo" style="width: 100px; height: 100px; object-fit: contain; margin-bottom: 10px;">
+            <img src="./yyt.jpg" alt="YYT Logo" style="width: 100px; height: 100px; object-fit: contain; margin-bottom: 10px;">
             <h1 class="doc-title font-bold">บริษัท ยั่งยืน เทคโนโลยี เซอร์วิส แอนด์ ซัพพลาย จำกัด</h1>
             <h2 class="doc-subtitle font-bold">แบบฟอร์มการขอเช่าคอมพิวเตอร์และสารสนเทศ</h2>
         </div>
@@ -269,7 +285,7 @@
         <!-- หมายเหตุ -->
         <div class="remark-section">
             <div style="margin-bottom: 5px;">
-                <span class="font-bold">หมายเหตุ</span> ได้รับอนุมัติจากผู้บังคับบัญชาต้นสังกัดแล้วรบกวนส่งไฟล์ สแกนทาง เมลล์ <a href="mailto:support@yangyuentech.com" style="color: #000;">support@yangyuentech.com</a>
+                <span class="font-bold">หมายเหตุ</span> ได้รับอนุมัติจากผู้บังคับบัญชาต้นสังกัดแล้วรบกวนส่งไฟล์ ฝ่ายบัญชีหรือคุุณเล็ก
             </div>
             <div>ติดต่อสอบถามรายละเอียดเพิ่มเติมโทร. <span class="font-bold">093-287-4544</span></div>
         </div>
@@ -380,6 +396,3 @@ ${equipmentsText}
     </script>
 </body>
 </html>
-
-
-                                            
