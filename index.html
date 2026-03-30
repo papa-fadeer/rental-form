@@ -196,14 +196,14 @@
 
     <!-- ปุ่ม Action -->
     <div class="floating-actions">
-        <button class="action-btn btn-telegram" onclick="sendToTelegram()" id="sendBtn">
+        <!--button class="action-btn btn-telegram" onclick="sendToTelegram()" id="sendBtn">
             <!-- Telegram Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!--svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13"></line>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
             </svg>
             ส่งแจ้งเตือน (พร้อม PDF)
-        </button>
+    </button -->
 
         <button class="action-btn btn-print" onclick="window.print()">
             <!-- Print Icon -->
@@ -297,8 +297,8 @@
     <!-- Script สำหรับแปลง PDF และส่งเข้า Telegram -->
     <script>
         // 🚨 นำ BOT TOKEN และ CHAT ID ของคุณมาใส่ตรงนี้ 🚨
-        const TELEGRAM_BOT_TOKEN = '7837280711:AAHnqIQMN6me15DN7b7Ftbeh94fI9AUZ4dE'; 
-        const TELEGRAM_CHAT_ID = '-1003784201826';
+        const TELEGRAM_BOT_TOKEN = ''; 
+        const TELEGRAM_CHAT_ID = '';
 
         async function sendToTelegram() {
             // ดึงข้อมูลชื่อ เพื่อตรวจสอบว่ากรอกหรือยัง
